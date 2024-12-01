@@ -2,6 +2,8 @@
 #include <fstream>
 #include <sstream>
 #include <assert.h>
+#include <vector>
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -60,6 +62,7 @@ static bool GLCheckError()
 unsigned int compileShader(GLenum type, const char* source);
 unsigned int createShader(const char* vsSource, const char* fsSource);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+std::vector<float> createCircleVertices(float centerX, float centerY, float radius);
 
 struct Vertex {
 	float x, y;
@@ -171,15 +174,38 @@ int main() {
 	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
 	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
 
-	unsigned int shader = createShader("Vertex.shader", "Fragment.shader");
-	GLCall(glUseProgram(shader));
-
-	GLCall(glUseProgram(0));
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 	GLCall(glBindVertexArray(0));
 
+	// TRAFFIC LIGHT CIRCLE
+
+	unsigned int circleVao;
+	GLCall(glGenVertexArrays(1, &circleVao));
+	GLCall(glBindVertexArray(circleVao));
+
+	std::vector<float> circleVertices = createCircleVertices(0.5, 0.5, 0.03);
+
+	unsigned int circleVbo;
+	GLCall(glGenBuffers(1, &circleVbo));
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, circleVbo));
+	GLCall(glBufferData(GL_ARRAY_BUFFER, circleVertices.size() * sizeof(float), circleVertices.data(), GL_STATIC_DRAW));
+
+	GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0));
+	GLCall(glEnableVertexAttribArray(0));
+
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+	GLCall(glBindVertexArray(0));
+
+	// SHADER PROGRAM
+
+	unsigned int shader = createShader("Vertex.shader", "Fragment.shader");
+	GLCall(glUseProgram(shader));
+
 	GLCall(glLineWidth(2.0));
+
+	GLCall(glUseProgram(0));
 
 	// MAIN LOOP
 
@@ -194,6 +220,8 @@ int main() {
 		GLCall(glUseProgram(shader));
 		GLCall(glBindVertexArray(vao));
 		GLCall(glDrawElements(GL_LINES, 80, GL_UNSIGNED_INT, indices));
+		GLCall(glBindVertexArray(circleVao));
+		GLCall(glDrawArrays(GL_TRIANGLE_FAN, 0, circleVertices.size()));
 
 		glfwSwapBuffers(window);
 
@@ -276,4 +304,21 @@ unsigned int createShader(const char* vsSource, const char* fsSource) {
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	GLCall(glViewport(0, 0, width, height));
+}
+
+std::vector<float> createCircleVertices(float centerX, float centerY, float radius) {
+	std::vector<float> vertices;
+    const int numSegments = 12;
+    const float twicePi = 2.0f * 3.14159f;
+
+    // Generate vertices for circle triangles
+    for (int i = 0; i <= numSegments; ++i) {
+        float angle = (i * twicePi) / numSegments;
+        float x = centerX + (radius * std::cos(angle));
+        float y = centerY + (radius * std::sin(angle));
+        vertices.push_back(x);
+        vertices.push_back(y);
+    }
+
+    return vertices;
 }
