@@ -10,6 +10,7 @@
 #include "Renderer.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "VertexArray.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -51,9 +52,7 @@ int main() {
 
 	// BUFFER SETUP
 
-	unsigned int vao;
-	GLCall(glGenVertexArrays(1, &vao));
-	GLCall(glBindVertexArray(vao));
+	VertexArray* va = new VertexArray();
 
 	// STREET SEGMENTS
 
@@ -110,9 +109,9 @@ int main() {
 	};
 
 	VertexBuffer* vb = new VertexBuffer(vertices, sizeof(vertices));
-
-	GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), NULL));
-	GLCall(glEnableVertexAttribArray(0));
+	VertexBufferLayout layout;
+	layout.Push<float>(2);
+	va->AddBuffer(*vb, layout);
 
 	IndexBuffer* ib = new IndexBuffer(indices, sizeof(indices));
 
@@ -160,7 +159,7 @@ int main() {
 		GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
 		GLCall(glUseProgram(shader));
-		GLCall(glBindVertexArray(vao));
+		va->Bind();
 		GLCall(glDrawElements(GL_LINES, 80, GL_UNSIGNED_INT, indices));
 		GLCall(glBindVertexArray(circleVao));
 		GLCall(glDrawArrays(GL_TRIANGLE_FAN, 0, circleVertices.size()));
