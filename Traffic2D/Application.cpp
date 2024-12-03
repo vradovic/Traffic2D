@@ -13,6 +13,7 @@
 #include "VertexArray.h"
 #include "Shader.h"
 #include "GLError.h"
+#include "StreetSegment.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -48,63 +49,7 @@ int main() {
 	glfwSwapInterval(1);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	// STREET SEGMENTS
-
-	float vertices[] = {
-		0.0, 0.0,
-		0.0, 0.5,
-		0.5, 0.0,
-		/*-0.75, 1.0,
-		-0.25, 1.0,
-		 0.25, 1.0,
-		 0.75, 1.0,
-
-		 -1.0, 0.75,
-		-0.75, 0.75,
-		-0.25, 0.75,
-		 0.25, 0.75,
-		 0.75, 0.75,
-		  1.0, 0.75,
-
-		 -1.0, 0.25,
-		-0.75, 0.25,
-		-0.25, 0.25,
-		 0.25, 0.25,
-		 0.75, 0.25,
-		  1.0, 0.25,
-
-		 -1.0, -0.25,
-		-0.75, -0.25,
-		-0.25, -0.25,
-		 0.25, -0.25,
-		 0.75, -0.25,
-		  1.0, -0.25,
-
-		 -1.0, -0.75,
-		-0.75, -0.75,
-		-0.25, -0.75,
-		 0.25, -0.75,
-		 0.75, -0.75,
-		  1.0, -0.75,
-
-		-0.75, -1.0,
-		-0.25, -1.0,
-		 0.25, -1.0,
-		 0.75, -1.0,*/
-	};
-
-	unsigned int indices[] = {
-		0, 1, 0, 2
-		/*4, 5, 5, 6, 6, 7, 7, 8, 8, 9,
-		10, 11, 11, 12, 12, 13, 13, 14, 14, 15,
-		16, 17, 17, 18, 18, 19, 19, 20, 20, 21,
-		22, 23, 23, 24, 24, 25, 25, 26, 26, 27,
-
-		0, 5, 5, 11, 11, 17, 17, 23, 23, 28,
-		1, 6, 6, 12, 12, 18, 18 ,24, 24, 29,
-		2, 7, 7, 13, 13, 19, 19, 25, 25, 30,
-		3, 8, 8, 14, 14, 20, 20, 26, 26, 31*/
-	};
+	const std::vector<StreetSegment>& segments = createStreetSegments();
 
 	VertexArray* va = new VertexArray();
 	VertexBuffer* vb = new VertexBuffer(vertices, sizeof(vertices));
