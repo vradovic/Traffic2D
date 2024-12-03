@@ -1,5 +1,5 @@
 #include "Shader.h"
-#include "Renderer.h"
+#include "GLError.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>

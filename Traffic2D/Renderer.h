@@ -1,13 +1,11 @@
 #pragma once
 
-#include <GL/glew.h>
-#include <assert.h>
+#include "VertexArray.h"
+#include "Shader.h"
 
-#define ASSERT(x) if (!(x)) assert(false);
-
-#define GLCall(x) GLClearError();\
-	x;\
-	ASSERT(GLCheckError())
-
-void GLClearError();
-bool GLCheckError();
+class Renderer
+{
+public:
+	void Draw(const VertexArray& va, unsigned int count, const Shader& shader, int mode) const;
+	void Clear() const;
+};
