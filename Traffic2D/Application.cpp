@@ -11,13 +11,12 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "VertexArray.h"
+#include "Shader.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 #define WINDOW_TITLE "Traffic2D"
 
-unsigned int compileShader(GLenum type, const char* source);
-unsigned int createShader(const char* vsSource, const char* fsSource);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 std::vector<float> createCircleVertices(float centerX, float centerY, float radius);
 
@@ -141,12 +140,9 @@ int main() {
 
 	// SHADER PROGRAM
 
-	unsigned int shader = createShader("Vertex.shader", "Fragment.shader");
-	GLCall(glUseProgram(shader));
+	Shader* shader = new Shader("Vertex.shader", "Fragment.shader");
 
 	GLCall(glLineWidth(2.0));
-
-	GLCall(glUseProgram(0));
 
 	// MAIN LOOP
 
@@ -158,7 +154,7 @@ int main() {
 		}
 		GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
-		GLCall(glUseProgram(shader));
+		shader->Bind();
 		va->Bind();
 		GLCall(glDrawElements(GL_LINES, 80, GL_UNSIGNED_INT, indices));
 		GLCall(glBindVertexArray(circleVao));
@@ -171,78 +167,10 @@ int main() {
 
 	delete vb;
 	delete ib;
+	delete shader;
 	glfwTerminate();
 
 	return 0;
-}
-
-unsigned int compileShader(GLenum type, const char* source) {
-	std::string content = "";
-	std::ifstream file(source);
-	std::stringstream ss;
-	if (file.is_open()) {
-		ss << file.rdbuf();
-		file.close();
-		std::cout << "Success reading from: " << source << std::endl;
-	} else {
-		ss << "";
-		std::cout << "Failed to read from: " << source << std::endl;
-	}
-	std::string temp = ss.str();
-	const char* sourceCode = temp.c_str();
-
-	int shader = glCreateShader(type);
-
-	int success;
-	char infoLog[512];
-	GLCall(glShaderSource(shader, 1, &sourceCode, NULL));
-	GLCall(glCompileShader(shader));
-
-	GLCall(glGetShaderiv(shader, GL_COMPILE_STATUS, &success));
-	if (success == GL_FALSE) {
-		GLCall(glGetShaderInfoLog(shader, 512, NULL, infoLog));
-		if (type == GL_VERTEX_SHADER)
-			printf("VERTEX");
-		else if (type == GL_FRAGMENT_SHADER)
-			printf("FRAGMENT");
-		printf(" error: \n");
-		printf(infoLog);
-	}
-
-	return shader;
-}
-
-unsigned int createShader(const char* vsSource, const char* fsSource) {
-	unsigned int program;
-	unsigned int vertexShader;
-	unsigned int fragmentShader;
-
-	program = glCreateProgram();
-
-	vertexShader = compileShader(GL_VERTEX_SHADER, vsSource);
-	fragmentShader = compileShader(GL_FRAGMENT_SHADER, fsSource);
-
-	GLCall(glAttachShader(program, vertexShader));
-	GLCall(glAttachShader(program, fragmentShader));
-
-	GLCall(glLinkProgram(program));
-	GLCall(glValidateProgram(program));
-
-	int success;
-	char infoLog[512];
-	GLCall(glGetProgramiv(program, GL_VALIDATE_STATUS, &success));
-	if (success == GL_FALSE) {
-		GLCall(glGetShaderInfoLog(program, 512, NULL, infoLog));
-		std::cout << "Shader error: \n";
-		std::cout << infoLog << std::endl;
-	}
-
-	GLCall(glDetachShader(program, vertexShader));
-	GLCall(glDeleteShader(vertexShader));
-	GLCall(glDetachShader(program, fragmentShader));
-	GLCall(glDeleteShader(fragmentShader));
-
-	return program;
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
