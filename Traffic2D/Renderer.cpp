@@ -20,8 +20,14 @@ StreetRenderer::StreetRenderer(const std::vector<StreetSegment>& segments, Shade
 		{
 			vertices.push_back(lane.GetStart().x);
 			vertices.push_back(lane.GetStart().y);
+			vertices.push_back(lane.GetColor().x);
+			vertices.push_back(lane.GetColor().y);
+			vertices.push_back(lane.GetColor().z);
 			vertices.push_back(lane.GetEnd().x);
 			vertices.push_back(lane.GetEnd().y);
+			vertices.push_back(lane.GetColor().x);
+			vertices.push_back(lane.GetColor().y);
+			vertices.push_back(lane.GetColor().z);
 			indices.push_back(next_index);
 			indices.push_back(next_index + 1);
 			next_index += 2;
@@ -32,6 +38,7 @@ StreetRenderer::StreetRenderer(const std::vector<StreetSegment>& segments, Shade
 	m_VB = new VertexBuffer(vertices.data(), 4 * vertices.size());
 	VertexBufferLayout layout;
 	layout.Push<float>(2);
+	layout.Push<float>(3);
 	m_VA->AddBuffer(*m_VB, layout);
 	m_IB = new IndexBuffer(indices.data(), indices.size());
 	m_IB->Bind();

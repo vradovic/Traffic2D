@@ -20,7 +20,6 @@
 #define WINDOW_TITLE "Traffic2D"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-std::vector<float> createCircleVertices(float centerX, float centerY, float radius);
 
 int main() {
 	if (!glfwInit()) {
@@ -55,6 +54,7 @@ int main() {
 	StreetRenderer* renderer = new StreetRenderer(segments, shader);
 
 	GLCall(glClearColor(0.827, 0.827, 0.827, 1.0));
+	GLCall(glLineWidth(10.0f));
 	while (!glfwWindowShouldClose(window))
 	{
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)

@@ -9,8 +9,8 @@ std::vector<StreetSegment> createStreetSegments()
 {
 	std::vector<StreetSegment> segments;
 
-	StreetSegmentLane lane1({ 0.0f, 0.0f }, { 0.5f, 0.0f }, 0.0f, 0.0f, 0.0f, 0.0f);
-	StreetSegmentLane lane2({ 0.5f, 0.05f }, { 0.0f, 0.05f }, 0.0f, 0.0f, 0.0f, 0.0f);
+	StreetSegmentLane lane1({ 0.0f, 0.0f }, { 0.5f, 0.0f }, { 1.0, 0.0, 0.0 }, 0.0f, 0.0f, 0.0f, 0.0f);
+	StreetSegmentLane lane2({ 0.5f, 0.05f }, { 0.0f, 0.05f }, { 0.0, 1.0, 0.0 }, 0.0f, 0.0f, 0.0f, 0.0f);
 
 	segments.push_back(StreetSegment({ lane1, lane2 }));
 

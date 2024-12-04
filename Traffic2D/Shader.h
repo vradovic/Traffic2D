@@ -2,6 +2,8 @@
 
 #include <string>
 #include <unordered_map>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class Shader
 {
@@ -19,5 +21,12 @@ public:
 	void Bind() const;
 	void Unbind() const;
 
-	void SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
+	template<typename T>
+	void SetUniform(const std::string& name, T value)
+	{
+		static_assert(false);
+	}
+
+	template<>
+	void SetUniform<float[2][3]>(const std::string& name, float values[2][3]);
 };
