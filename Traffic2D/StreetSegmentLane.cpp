@@ -28,6 +28,10 @@ void StreetSegmentLane::DecrementCongestion()
 	else
 	{
 		m_Congestion -= m_CongestionStep;
+		for (auto connectedLane : m_ConnectedLanes)
+		{
+			connectedLane->IncrementCongestion();
+		}
 	}
 	interpolateColor();
 }

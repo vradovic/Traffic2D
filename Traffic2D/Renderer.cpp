@@ -14,20 +14,20 @@ StreetRenderer::StreetRenderer(const std::vector<StreetSegment>& segments, Shade
 	for (size_t i = 0; i < segments.size(); i++)
 	{
 		StreetSegment segment = segments[i];
-		std::vector<StreetSegmentLane> lanes = segment.GetLanes();
+		auto lanes = segment.GetLanes();
 
-		for (const StreetSegmentLane& lane : lanes)
+		for (auto lane : lanes)
 		{
-			vertices.push_back(lane.GetStart().x);
-			vertices.push_back(lane.GetStart().y);
-			vertices.push_back(lane.GetColor().x);
-			vertices.push_back(lane.GetColor().y);
-			vertices.push_back(lane.GetColor().z);
-			vertices.push_back(lane.GetEnd().x);
-			vertices.push_back(lane.GetEnd().y);
-			vertices.push_back(lane.GetColor().x);
-			vertices.push_back(lane.GetColor().y);
-			vertices.push_back(lane.GetColor().z);
+			vertices.push_back(lane->GetStart().x);
+			vertices.push_back(lane->GetStart().y);
+			vertices.push_back(lane->GetColor().x);
+			vertices.push_back(lane->GetColor().y);
+			vertices.push_back(lane->GetColor().z);
+			vertices.push_back(lane->GetEnd().x);
+			vertices.push_back(lane->GetEnd().y);
+			vertices.push_back(lane->GetColor().x);
+			vertices.push_back(lane->GetColor().y);
+			vertices.push_back(lane->GetColor().z);
 			indices.push_back(next_index);
 			indices.push_back(next_index + 1);
 			next_index += 2;
@@ -66,20 +66,20 @@ void StreetRenderer::UpdateBuffer(const std::vector<StreetSegment>& segments)
 	for (size_t i = 0; i < segments.size(); i++)
 	{
 		StreetSegment segment = segments[i];
-		std::vector<StreetSegmentLane> lanes = segment.GetLanes();
+		auto lanes = segment.GetLanes();
 
-		for (const StreetSegmentLane& lane : lanes)
+		for (auto lane : lanes)
 		{
-			vertices.push_back(lane.GetStart().x);
-			vertices.push_back(lane.GetStart().y);
-			vertices.push_back(lane.GetColor().x);
-			vertices.push_back(lane.GetColor().y);
-			vertices.push_back(lane.GetColor().z);
-			vertices.push_back(lane.GetEnd().x);
-			vertices.push_back(lane.GetEnd().y);
-			vertices.push_back(lane.GetColor().x);
-			vertices.push_back(lane.GetColor().y);
-			vertices.push_back(lane.GetColor().z);
+			vertices.push_back(lane->GetStart().x);
+			vertices.push_back(lane->GetStart().y);
+			vertices.push_back(lane->GetColor().x);
+			vertices.push_back(lane->GetColor().y);
+			vertices.push_back(lane->GetColor().z);
+			vertices.push_back(lane->GetEnd().x);
+			vertices.push_back(lane->GetEnd().y);
+			vertices.push_back(lane->GetColor().x);
+			vertices.push_back(lane->GetColor().y);
+			vertices.push_back(lane->GetColor().z);
 		}
 	}
 

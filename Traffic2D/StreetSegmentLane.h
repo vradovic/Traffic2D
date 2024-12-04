@@ -1,6 +1,8 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <vector>
+#include <memory>
 
 struct Vertex
 {
@@ -14,6 +16,7 @@ private:
 	Vertex m_Start;
 	Vertex m_End;
 	glm::vec3 m_Color;
+	std::vector<std::shared_ptr<StreetSegmentLane>> m_ConnectedLanes;
 	float m_Congestion;
 	float m_CongestionRate;
 	float m_CongestionStep;
@@ -27,7 +30,9 @@ public:
 	void IncrementCongestionRate();
 	void DecrementCongestionRate();
 
-	inline Vertex GetStart() const { return m_Start; }
-	inline Vertex GetEnd() const { return m_End; }
-	inline glm::vec3 GetColor() const { return m_Color; }
+	Vertex GetStart() const { return m_Start; }
+	Vertex GetEnd() const { return m_End; }
+	glm::vec3 GetColor() const { return m_Color; }
+	std::vector<std::shared_ptr<StreetSegmentLane>>& GetConnectedLanes() { return m_ConnectedLanes; }
+	void AddLane(std::shared_ptr<StreetSegmentLane> lane) { m_ConnectedLanes.push_back(lane); }
 };

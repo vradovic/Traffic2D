@@ -57,7 +57,8 @@ int main() {
 
 	Shader* shader = new Shader("Vertex.shader", "Fragment.shader");
 
-	std::vector<StreetSegment> segments = createStreetSegments();
+	std::vector<StreetSegment> segments;
+	createStreetSegments(segments);
 	StreetRenderer* renderer = new StreetRenderer(segments, shader);
 
 	GLCall(glClearColor(0.827, 0.827, 0.827, 1.0));
@@ -72,15 +73,16 @@ int main() {
 		if (mouseLeftHeld || mouseRightHeld)
 		{
 			updateLaneCongestion(mouseX, mouseY, segments, mouseLeftHeld);
-			renderer->UpdateBuffer(segments);
 		}
 		else if (mouseRightHeld)
 		{
 			// Decrement lane congestion
 		}
 
-		renderer->Clear();
+		updateAllCongestions(segments);
 
+		renderer->UpdateBuffer(segments);
+		renderer->Clear();
 		renderer->Draw(GL_LINES);
 
 		glfwSwapBuffers(window);
