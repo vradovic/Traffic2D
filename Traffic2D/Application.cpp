@@ -49,20 +49,11 @@ int main() {
 	glfwSwapInterval(1);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	const std::vector<StreetSegment>& segments = createStreetSegments();
-
-	VertexArray* va = new VertexArray();
-	VertexBuffer* vb = new VertexBuffer(vertices, sizeof(vertices));
-	VertexBufferLayout layout;
-	layout.Push<float>(2);
-	va->AddBuffer(*vb, layout);
-
-	IndexBuffer* ib = new IndexBuffer(indices, sizeof(indices));
-	ib->Bind();
-
 	Shader* shader = new Shader("Vertex.shader", "Fragment.shader");
 
-	Renderer renderer;
+	const std::vector<StreetSegment>& segments = createStreetSegments();
+	StreetRenderer* renderer = new StreetRenderer(segments, shader);
+
 	GLCall(glClearColor(0.827, 0.827, 0.827, 1.0));
 	while (!glfwWindowShouldClose(window))
 	{
@@ -70,18 +61,16 @@ int main() {
 		{
 			glfwSetWindowShouldClose(window, GL_TRUE);
 		}
-		renderer.Clear();
+		renderer->Clear();
 
-		renderer.Draw(*va, ib->GetCount(), *shader, GL_LINES);
+		renderer->Draw(GL_LINES);
 
 		glfwSwapBuffers(window);
 
 		glfwPollEvents();
 	}
 
-	delete vb;
-	delete ib;
-	delete shader;
+	delete renderer; // shader deleted in renderer destructor
 	glfwTerminate();
 
 	return 0;
@@ -89,21 +78,4 @@ int main() {
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	GLCall(glViewport(0, 0, width, height));
-}
-
-std::vector<float> createCircleVertices(float centerX, float centerY, float radius) {
-	std::vector<float> vertices;
-    const int numSegments = 12;
-    const float twicePi = 2.0f * 3.14159f;
-
-    // Generate vertices for circle triangles
-    for (int i = 0; i <= numSegments; ++i) {
-        float angle = (i * twicePi) / numSegments;
-        float x = centerX + (radius * std::cos(angle));
-        float y = centerY + (radius * std::sin(angle));
-        vertices.push_back(x);
-        vertices.push_back(y);
-    }
-
-    return vertices;
 }

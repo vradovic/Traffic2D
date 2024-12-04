@@ -1,20 +1,16 @@
 #pragma once
 
 #include <vector>
-
-struct Vertex
-{
-	float x, y;
-};
+#include "StreetSegmentLane.h"
 
 class StreetSegment
 {
 private:
-	std::vector<StreetSegment> m_LinkedSegments;
-	Vertex m_VertexA, m_VertexB;
+	std::vector<StreetSegmentLane> m_Lanes;
 public:
-	StreetSegment(Vertex vertexA, Vertex vertexB);
-	void AddLinkedSegment(const StreetSegment& ss);
+	StreetSegment(const std::vector<StreetSegmentLane>& lanes);
+	
+	inline const std::vector<StreetSegmentLane>& GetLanes() const { return m_Lanes; }
 };
 
-const std::vector<StreetSegment>& createStreetSegments();
+std::vector<StreetSegment> createStreetSegments();

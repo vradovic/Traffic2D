@@ -1,7 +1,7 @@
 #include "StreetSegmentLane.h"
 
-StreetSegmentLane::StreetSegmentLane(float congestion, float congestionRate, float congestionStep, float congestionRateStep)
-	: m_Congestion(congestion), m_CongestionRate(congestionRate), m_CongestionStep(congestionStep), m_CongestionRateStep(congestionRateStep)
+StreetSegmentLane::StreetSegmentLane(Vertex start, Vertex end, float congestion, float congestionRate, float congestionStep, float congestionRateStep)
+	: m_Start(start), m_End(end), m_Congestion(congestion), m_CongestionRate(congestionRate), m_CongestionStep(congestionStep), m_CongestionRateStep(congestionRateStep)
 {
 }
 
