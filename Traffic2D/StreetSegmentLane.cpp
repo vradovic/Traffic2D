@@ -1,18 +1,35 @@
 #include "StreetSegmentLane.h"
 
-StreetSegmentLane::StreetSegmentLane(Vertex start, Vertex end, glm::vec3 color, float congestion, float congestionRate, float congestionStep, float congestionRateStep)
-	: m_Start(start), m_End(end), m_Color(color), m_Congestion(congestion), m_CongestionRate(congestionRate), m_CongestionStep(congestionStep), m_CongestionRateStep(congestionRateStep)
+StreetSegmentLane::StreetSegmentLane(Vertex start, Vertex end, float congestion, float congestionRate, float congestionStep, float congestionRateStep)
+	: m_Start(start), m_End(end), m_Congestion(congestion), m_CongestionRate(congestionRate), m_CongestionStep(congestionStep), m_CongestionRateStep(congestionRateStep)
 {
+	interpolateColor();
 }
 
 void StreetSegmentLane::IncrementCongestion()
 {
-	m_Congestion += m_CongestionStep;
+	if (m_Congestion + m_CongestionStep > 1.0f)
+	{
+		m_Congestion = 1.0f;
+	}
+	else
+	{
+		m_Congestion += m_CongestionStep;
+	}
+	interpolateColor();
 }
 
 void StreetSegmentLane::DecrementCongestion()
 {
-	m_Congestion -= m_CongestionStep;
+	if (m_Congestion - m_CongestionStep < 0.0f)
+	{
+		m_Congestion = 0.0f;
+	}
+	else
+	{
+		m_Congestion -= m_CongestionStep;
+	}
+	interpolateColor();
 }
 
 void StreetSegmentLane::IncrementCongestionRate()
@@ -24,3 +41,13 @@ void StreetSegmentLane::DecrementCongestionRate()
 {
 	m_CongestionRate -= m_CongestionRateStep;
 }
+
+void StreetSegmentLane::interpolateColor()
+{
+	float red = (1.0f - m_Congestion) * 0.0f + m_Congestion * 1.0f;
+	float green = (1.0f - m_Congestion) * 1.0f + m_Congestion * 0.0f;
+	float blue = 0.0f;
+
+	m_Color = glm::vec3(red, green, blue);
+}
+

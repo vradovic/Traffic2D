@@ -23,4 +23,5 @@ public:
 	StreetRenderer(const std::vector<StreetSegment>& segments, Shader* shader);
 	~StreetRenderer();
 	void Draw(int mode) const;
+	void UpdateBuffer(const std::vector<StreetSegment>& segments);
 };

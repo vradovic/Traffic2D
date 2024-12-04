@@ -10,7 +10,9 @@ private:
 public:
 	StreetSegment(const std::vector<StreetSegmentLane>& lanes);
 	
-	inline const std::vector<StreetSegmentLane>& GetLanes() const { return m_Lanes; }
+	inline std::vector<StreetSegmentLane>& GetLanes() { return m_Lanes; }
 };
 
 std::vector<StreetSegment> createStreetSegments();
+
+void updateLaneCongestion(double mouseX, double mouseY, std::vector<StreetSegment>& segments, bool isIncrement);

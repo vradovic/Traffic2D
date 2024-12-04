@@ -59,3 +59,30 @@ void StreetRenderer::Draw(int mode) const
 	m_VA->Bind();
 	GLCall(glDrawElements(mode, m_IB->GetCount(), GL_UNSIGNED_INT, nullptr));
 }
+
+void StreetRenderer::UpdateBuffer(const std::vector<StreetSegment>& segments)
+{
+	std::vector<float> vertices;
+	for (size_t i = 0; i < segments.size(); i++)
+	{
+		StreetSegment segment = segments[i];
+		std::vector<StreetSegmentLane> lanes = segment.GetLanes();
+
+		for (const StreetSegmentLane& lane : lanes)
+		{
+			vertices.push_back(lane.GetStart().x);
+			vertices.push_back(lane.GetStart().y);
+			vertices.push_back(lane.GetColor().x);
+			vertices.push_back(lane.GetColor().y);
+			vertices.push_back(lane.GetColor().z);
+			vertices.push_back(lane.GetEnd().x);
+			vertices.push_back(lane.GetEnd().y);
+			vertices.push_back(lane.GetColor().x);
+			vertices.push_back(lane.GetColor().y);
+			vertices.push_back(lane.GetColor().z);
+		}
+	}
+
+	m_VB->Bind();
+	m_VB->UpdateData(vertices.data(), 4 * vertices.size());
+}

@@ -16,10 +16,16 @@
 #include "StreetSegment.h"
 
 #define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
+#define WINDOW_HEIGHT 800
 #define WINDOW_TITLE "Traffic2D"
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+
+static bool mouseLeftHeld = false;
+static bool mouseRightHeld = false;
+static double mouseX = 0.0;
+static double mouseY = 0.0;
 
 int main() {
 	if (!glfwInit()) {
@@ -46,11 +52,12 @@ int main() {
 	}
 
 	glfwSwapInterval(1);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+	glfwSetMouseButtonCallback(window, mouseButtonCallback);
 
 	Shader* shader = new Shader("Vertex.shader", "Fragment.shader");
 
-	const std::vector<StreetSegment>& segments = createStreetSegments();
+	std::vector<StreetSegment> segments = createStreetSegments();
 	StreetRenderer* renderer = new StreetRenderer(segments, shader);
 
 	GLCall(glClearColor(0.827, 0.827, 0.827, 1.0));
@@ -61,6 +68,17 @@ int main() {
 		{
 			glfwSetWindowShouldClose(window, GL_TRUE);
 		}
+
+		if (mouseLeftHeld || mouseRightHeld)
+		{
+			updateLaneCongestion(mouseX, mouseY, segments, mouseLeftHeld);
+			renderer->UpdateBuffer(segments);
+		}
+		else if (mouseRightHeld)
+		{
+			// Decrement lane congestion
+		}
+
 		renderer->Clear();
 
 		renderer->Draw(GL_LINES);
@@ -70,12 +88,31 @@ int main() {
 		glfwPollEvents();
 	}
 
-	delete renderer; // shader deleted in renderer destructor
+	delete renderer; // Shader deleted in renderer destructor
 	glfwTerminate();
 
 	return 0;
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
 	GLCall(glViewport(0, 0, width, height));
+}
+
+void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT || button == GLFW_MOUSE_BUTTON_RIGHT)
+	{
+		double xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+
+		int width, height;
+		glfwGetWindowSize(window, &width, &height);
+
+		// Normalize mouse coordinates
+		mouseX = 2.0f * (xpos / width) - 1.0f;
+		mouseY = 1.0f - 2.0f * (ypos / height);
+
+		mouseLeftHeld = action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_LEFT;
+		mouseRightHeld = action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_RIGHT;
+	}
 }

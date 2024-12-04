@@ -18,8 +18,10 @@ private:
 	float m_CongestionRate;
 	float m_CongestionStep;
 	float m_CongestionRateStep;
+
+	void interpolateColor();
 public:
-	StreetSegmentLane(Vertex start, Vertex end, glm::vec3 color, float congestion, float congestionRate, float congestionStep, float congestionRateStep);
+	StreetSegmentLane(Vertex start, Vertex end, float congestion, float congestionRate, float congestionStep, float congestionRateStep);
 	void IncrementCongestion();
 	void DecrementCongestion();
 	void IncrementCongestionRate();
