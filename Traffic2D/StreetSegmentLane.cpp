@@ -1,9 +1,18 @@
 #include "StreetSegmentLane.h"
+#include <thread>
 
 StreetSegmentLane::StreetSegmentLane(Vertex start, Vertex end, float congestion, float congestionRate)
-	: m_Start(start), m_End(end), m_Congestion(congestion), m_CongestionRate(congestionRate), m_TrafficLight(TrafficLight(20.0))
+	: m_Start(start), m_End(end), m_Congestion(congestion), m_CongestionRate(congestionRate), m_TrafficLight(6.0)
 {
+	m_TrafficLightThread = std::thread(&TrafficLight::Run, &m_TrafficLight);
+
 	interpolateColor();
+}
+
+StreetSegmentLane::~StreetSegmentLane()
+{
+	m_TrafficLight.Stop();
+	m_TrafficLightThread.join();
 }
 
 void StreetSegmentLane::IncrementCongestion(float value)
@@ -43,6 +52,17 @@ void StreetSegmentLane::DecrementCongestion(float value)
 	}
 
 	interpolateColor();
+}
+
+glm::vec3 StreetSegmentLane::GetTrafficLightColor() const
+{
+	switch (m_TrafficLight.GetColor())
+	{
+	case 0:
+		return glm::vec3(1.0f, 0.0f, 0.0f);
+	case 1:
+		return glm::vec3(0.0f, 1.0f, 0.0f);
+	};
 }
 
 void StreetSegmentLane::interpolateColor()

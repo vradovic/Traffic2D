@@ -35,7 +35,7 @@ StreetRenderer::StreetRenderer(const std::vector<StreetSegment>& segments, Shade
 	}
 
 	m_VA = new VertexArray();
-	m_VB = new VertexBuffer(vertices.data(), 4 * vertices.size());
+	m_VB = new VertexBuffer(vertices, 4 * vertices.size());
 	VertexBufferLayout layout;
 	layout.Push<float>(2);
 	layout.Push<float>(3);
@@ -84,7 +84,7 @@ void StreetRenderer::UpdateBuffer(const std::vector<StreetSegment>& segments)
 	}
 
 	m_VB->Bind();
-	m_VB->UpdateData(vertices.data(), 4 * vertices.size());
+	m_VB->UpdateData(vertices, 4 * vertices.size());
 }
 
 TrafficLightRenderer::TrafficLightRenderer(const std::vector<StreetSegment>& segments, Shader* shader)
@@ -119,21 +119,22 @@ TrafficLightRenderer::TrafficLightRenderer(const std::vector<StreetSegment>& seg
 				position = { lane->GetEnd().x + 0.05f, lane->GetEnd().y - 0.05f };
 			}
 
+			glm::vec3 red = { 1.0f, 0.0f, 0.0f };
 			vertices.push_back(position.x - 0.03);
 			vertices.push_back(position.y);
-			vertices.push_back(lane->GetColor().r);
-			vertices.push_back(lane->GetColor().g);
-			vertices.push_back(lane->GetColor().b);
+			vertices.push_back(red.r);
+			vertices.push_back(red.g);
+			vertices.push_back(red.b);
 			vertices.push_back(position.x + 0.03);
 			vertices.push_back(position.y);
-			vertices.push_back(lane->GetColor().r);
-			vertices.push_back(lane->GetColor().g);
-			vertices.push_back(lane->GetColor().b);
+			vertices.push_back(red.r);
+			vertices.push_back(red.g);
+			vertices.push_back(red.b);
 			vertices.push_back(position.x);
 			vertices.push_back(position.y + 0.03);
-			vertices.push_back(lane->GetColor().r);
-			vertices.push_back(lane->GetColor().g);
-			vertices.push_back(lane->GetColor().b);
+			vertices.push_back(red.r);
+			vertices.push_back(red.g);
+			vertices.push_back(red.b);
 			
 			indices.push_back(next_index);
 			indices.push_back(next_index + 1);
@@ -143,7 +144,7 @@ TrafficLightRenderer::TrafficLightRenderer(const std::vector<StreetSegment>& seg
 	}
 
 	m_VA = new VertexArray();
-	m_VB = new VertexBuffer(vertices.data(), 4 * vertices.size());
+	m_VB = new VertexBuffer(vertices, 4 * vertices.size());
 	VertexBufferLayout layout;
 	layout.Push<float>(2);
 	layout.Push<float>(3);
@@ -171,4 +172,50 @@ void TrafficLightRenderer::Draw(int mode) const
 
 void TrafficLightRenderer::UpdateBuffer(const std::vector<StreetSegment>& segments)
 {
+	std::vector<float> vertices;
+	for (size_t i = 0; i < segments.size(); i++)
+	{
+		StreetSegment segment = segments[i];
+		auto lanes = segment.GetLanes();
+		for (auto lane : lanes)
+		{
+			if (lane->GetConnectedLanes().size() < 1) continue;
+			Vertex position;
+			if (lane->GetStart().x > lane->GetEnd().x)
+			{
+				position = { lane->GetEnd().x + 0.05f, lane->GetEnd().y + 0.05f };
+			}
+			else if (lane->GetStart().x < lane->GetEnd().x)
+			{
+				position = { lane->GetEnd().x - 0.05f, lane->GetEnd().y - 0.05f };
+			}
+			else if (lane->GetStart().y > lane->GetEnd().y)
+			{
+				position = { lane->GetEnd().x - 0.05f, lane->GetEnd().y + 0.05f };
+			}
+			else
+			{
+				position = { lane->GetEnd().x + 0.05f, lane->GetEnd().y - 0.05f };
+			}
+
+			glm::vec3 color = lane->GetTrafficLightColor();
+			vertices.push_back(position.x - 0.03);
+			vertices.push_back(position.y);
+			vertices.push_back(color.r);
+			vertices.push_back(color.g);
+			vertices.push_back(color.b);
+			vertices.push_back(position.x + 0.03);
+			vertices.push_back(position.y);
+			vertices.push_back(color.r);
+			vertices.push_back(color.g);
+			vertices.push_back(color.b);
+			vertices.push_back(position.x);
+			vertices.push_back(position.y + 0.03);
+			vertices.push_back(color.r);
+			vertices.push_back(color.g);
+			vertices.push_back(color.b);
+		}
+	}
+	m_VB->Bind();
+	m_VB->UpdateData(vertices, 4 * vertices.size());
 }

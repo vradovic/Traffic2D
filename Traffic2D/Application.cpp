@@ -87,6 +87,7 @@ int main() {
 		renderer->Clear();
 		renderer->Draw(GL_LINES);
 
+		trafficLightRenderer->UpdateBuffer(segments);
 		trafficLightRenderer->Draw(GL_TRIANGLES);
 
 		glfwSwapBuffers(window);

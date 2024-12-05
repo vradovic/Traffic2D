@@ -22,10 +22,12 @@ private:
 	float m_Congestion;
 	float m_CongestionRate;
 	TrafficLight m_TrafficLight;
+	std::thread m_TrafficLightThread;
 
 	void interpolateColor();
 public:
 	StreetSegmentLane(Vertex start, Vertex end, float congestion, float congestionRate);
+	~StreetSegmentLane();
 	void IncrementCongestion(float value = 0);
 	void DecrementCongestion(float value = 0);
 
@@ -36,4 +38,6 @@ public:
 	void AddLane(std::shared_ptr<StreetSegmentLane> lane) { m_ConnectedLanes.push_back(lane); }
 	float GetCongestion() const { return m_Congestion; }
 	float GetCongestionRate() const { return m_CongestionRate; }
+
+	glm::vec3 GetTrafficLightColor() const;
 };
