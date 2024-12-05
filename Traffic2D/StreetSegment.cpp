@@ -73,6 +73,16 @@ void updateAllCongestions(std::vector<StreetSegment>& segments)
 			std::vector<std::shared_ptr<StreetSegmentLane>> connectedLanes = lane->GetConnectedLanes();
 			std::vector<std::shared_ptr<StreetSegmentLane>> availableLanes;
 
+			if (connectedLanes.empty())
+			{
+				if (lane->GetCongestion() > 0.0f)
+				{
+					lane->DecrementCongestion(0.001f);
+				}
+
+				continue;
+			}
+
 			for (std::shared_ptr<StreetSegmentLane> connectedLane : connectedLanes)
 			{
 				if (connectedLane->GetCongestion() < 1.0f)
