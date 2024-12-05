@@ -10,7 +10,7 @@ class TrafficLight
 {
 private:
 	int m_Time;
-	std::atomic<char> m_Color; // 0 = red, 1 = green
+	std::atomic<char> m_Color; // 0 = red, 1 = green, 2 = red yellow, 3 = yellow
 	std::atomic<bool> m_Running;
 	std::mutex m_Mutex;
 

@@ -105,8 +105,10 @@ void updateAllCongestions(std::vector<StreetSegment>& segments)
 
 			if (lane->GetCongestion() == 0.0f) continue;
 
-			if (lane->GetTrafficLightColor() == glm::vec3(1.0f, 0.0f, 0.0f)) continue;
-			lane->DecrementCongestion();
+			if (lane->GetTrafficLightColor() == glm::vec3(0.0f, 1.0f, 0.0f))
+			{ 
+				lane->DecrementCongestion();
+			}
 		}
 	}
 }
