@@ -15,15 +15,25 @@ void createStreetSegments(std::vector<StreetSegment>& segments)
 	auto lane4 = std::make_shared<StreetSegmentLane>(Vertex{ -0.05f, 1.0f }, Vertex{ -0.05f, 0.05f }, 0.0f, 0.005f);
 	auto lane5 = std::make_shared<StreetSegmentLane>(Vertex{ -0.05f, 0.05f }, Vertex{ -1.0f, 0.05f }, 0.0f, 0.005f);
 	auto lane6 = std::make_shared<StreetSegmentLane>(Vertex{ -1.0, 0.0f }, Vertex{ -0.05f, 0.0f }, 0.0f, 0.005f);
+	auto lane7 = std::make_shared<StreetSegmentLane>(Vertex{ 0.55, 0.0f }, Vertex{ 1.0f, 0.0f }, 0.0f, 0.005f);
+	auto lane8 = std::make_shared<StreetSegmentLane>(Vertex{ 1.0, 0.05f }, Vertex{ 0.55f, 0.05f }, 0.0f, 0.005f);
+	auto lane9 = std::make_shared<StreetSegmentLane>(Vertex{ 0.55f, 0.05f }, Vertex{ 0.55f, 1.0f }, 0.0f, 0.005f);
+	auto lane10 = std::make_shared<StreetSegmentLane>(Vertex{ 0.5f, 1.0f }, Vertex{ 0.5f, 0.05f }, 0.0f, 0.005f);
 
+	lane1->AddLane(lane7);
 	lane2->AddLane(lane3);
 	lane2->AddLane(lane5);
 	lane4->AddLane(lane5);
 	lane6->AddLane(lane1);
+	lane8->AddLane(lane2);
+	lane8->AddLane(lane9);
+	lane10->AddLane(lane2);
 
 	segments.push_back(StreetSegment({ lane1, lane2 }));
 	segments.push_back(StreetSegment({ lane3, lane4 }));
 	segments.push_back(StreetSegment({ lane5, lane6 }));
+	segments.push_back(StreetSegment({ lane7, lane8 }));
+	segments.push_back(StreetSegment({ lane9, lane10 }));
 }
 
 void updateLaneCongestion(double mouseX, double mouseY, std::vector<StreetSegment>& segments, bool isIncrement)
