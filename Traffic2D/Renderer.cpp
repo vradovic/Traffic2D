@@ -1,9 +1,24 @@
 #include "Renderer.h"
 #include "GLError.h"
 
+Renderer::~Renderer()
+{
+	delete m_VA;
+	delete m_VB;
+	delete m_IB;
+	delete m_Shader;
+}
+
 void Renderer::Clear() const
 {
 	GLCall(glClear(GL_COLOR_BUFFER_BIT));
+}
+
+void Renderer::Draw(int mode) const
+{
+	m_Shader->Bind();
+	m_VA->Bind();
+	GLCall(glDrawElements(mode, m_IB->GetCount(), GL_UNSIGNED_INT, nullptr));
 }
 
 StreetRenderer::StreetRenderer(const std::vector<StreetSegment>& segments, Shader* shader)
@@ -43,21 +58,6 @@ StreetRenderer::StreetRenderer(const std::vector<StreetSegment>& segments, Shade
 	m_IB = new IndexBuffer(indices.data(), indices.size());
 	m_IB->Bind();
 	m_Shader = shader;
-}
-
-StreetRenderer::~StreetRenderer()
-{
-	delete m_VA;
-	delete m_VB;
-	delete m_IB;
-	delete m_Shader;
-}
-
-void StreetRenderer::Draw(int mode) const
-{
-	m_Shader->Bind();
-	m_VA->Bind();
-	GLCall(glDrawElements(mode, m_IB->GetCount(), GL_UNSIGNED_INT, nullptr));
 }
 
 void StreetRenderer::UpdateBuffer(const std::vector<StreetSegment>& segments)
@@ -155,21 +155,6 @@ TrafficLightRenderer::TrafficLightRenderer(const std::vector<StreetSegment>& seg
 
 }
 
-TrafficLightRenderer::~TrafficLightRenderer()
-{
-	delete m_VA;
-	delete m_VB;
-	delete m_IB;
-	delete m_Shader;
-}
-
-void TrafficLightRenderer::Draw(int mode) const
-{
-	m_Shader->Bind();
-	m_VA->Bind();
-	GLCall(glDrawElements(mode, m_IB->GetCount(), GL_UNSIGNED_INT, nullptr));
-}
-
 void TrafficLightRenderer::UpdateBuffer(const std::vector<StreetSegment>& segments)
 {
 	std::vector<float> vertices;
@@ -218,4 +203,31 @@ void TrafficLightRenderer::UpdateBuffer(const std::vector<StreetSegment>& segmen
 	}
 	m_VB->Bind();
 	m_VB->UpdateData(vertices, 4 * vertices.size());
+}
+
+LogoRenderer::LogoRenderer(Shader* shader)
+{
+	std::vector<float> vertices = {
+		-1.0f, 1.0f, 0.0f, 0.0f, // x, y, tex_x, tex_y
+		-0.5f, 1.0f, 1.0f, 0.0f,
+		-0.5f, 0.5f, 1.0f, 1.0f,
+		-1.0f, 0.5f, 0.0f, 1.0f
+	};
+
+	unsigned int indices[] = {
+		0, 1, 2,
+		2, 3, 0
+	};
+
+	m_VA = new VertexArray();
+	m_VB = new VertexBuffer(vertices, 4 * 4 * sizeof(float));
+
+	VertexBufferLayout layout;
+	layout.Push<float>(2);
+	layout.Push<float>(2);
+	m_VA->AddBuffer(*m_VB, layout);
+
+	m_IB = new IndexBuffer(indices, 6);
+	m_IB->Bind();
+	m_Shader = shader;
 }

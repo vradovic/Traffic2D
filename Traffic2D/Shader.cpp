@@ -1,5 +1,4 @@
 #include "Shader.h"
-#include "GLError.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -111,11 +110,4 @@ void Shader::Bind() const
 void Shader::Unbind() const
 {
 	GLCall(glUseProgram(0));
-}
-
-
-template<>
-void Shader::SetUniform<float[2][3]>(const std::string& name, float values[2][3])
-{
-	GLCall(glUniform3fv(getUniformLocation(name), 1, &values[0][0]));
 }

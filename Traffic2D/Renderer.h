@@ -7,35 +7,33 @@
 
 class Renderer
 {
+protected:
+	VertexArray* m_VA;
+	VertexBuffer* m_VB;
+	IndexBuffer* m_IB;
+	Shader* m_Shader;
 public:
-	virtual void Draw(int mode) const = 0;
+	~Renderer();
+	virtual void Draw(int mode) const;
 	void Clear() const;
 };
 
 class StreetRenderer : public Renderer
 {
-private:
-	VertexArray* m_VA;
-	VertexBuffer* m_VB;
-	IndexBuffer* m_IB;
-	Shader* m_Shader;
 public:
 	StreetRenderer(const std::vector<StreetSegment>& segments, Shader* shader);
-	~StreetRenderer();
-	void Draw(int mode) const;
 	void UpdateBuffer(const std::vector<StreetSegment>& segments);
 };
 
 class TrafficLightRenderer : public Renderer
 {
-private:
-	VertexArray* m_VA;
-	VertexBuffer* m_VB;
-	IndexBuffer* m_IB;
-	Shader* m_Shader;
 public:
 	TrafficLightRenderer(const std::vector<StreetSegment>& segments, Shader* shader);
-	~TrafficLightRenderer();
-	void Draw(int mode) const;
 	void UpdateBuffer(const std::vector<StreetSegment>& segments);
+};
+
+class LogoRenderer : public Renderer
+{
+public:
+	LogoRenderer(Shader* shader);
 };

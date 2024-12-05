@@ -133,24 +133,30 @@
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="StreetSegment.cpp" />
     <ClCompile Include="StreetSegmentLane.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TrafficLight.cpp" />
     <ClCompile Include="VertexArray.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Fragment.shader" />
+    <None Include="FragmentTexture.shader" />
     <None Include="packages.config" />
     <None Include="Vertex.shader" />
+    <None Include="VertexTexture.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GLError.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="StreetSegment.h" />
     <ClInclude Include="StreetSegmentLane.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="TrafficLight.h" />
     <ClInclude Include="VertexArray.h" />
     <ClInclude Include="VertexBuffer.h" />

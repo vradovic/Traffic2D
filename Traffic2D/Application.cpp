@@ -14,6 +14,7 @@
 #include "Shader.h"
 #include "GLError.h"
 #include "StreetSegment.h"
+#include "Texture.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 800
@@ -57,11 +58,19 @@ int main() {
 
 	Shader* shader = new Shader("Vertex.shader", "Fragment.shader");
 	Shader* trafficLightShader = new Shader("Vertex.shader", "Fragment.shader");
+	Shader* logoShader = new Shader("VertexTexture.shader", "FragmentTexture.shader");
 
 	std::vector<StreetSegment> segments;
 	createStreetSegments(segments);
+
 	StreetRenderer* renderer = new StreetRenderer(segments, shader);
 	TrafficLightRenderer* trafficLightRenderer = new TrafficLightRenderer(segments, trafficLightShader);
+	LogoRenderer* logoRenderer = new LogoRenderer(logoShader);
+
+	logoShader->Bind();
+	Texture texture("grb.png");
+	texture.Bind();
+	logoShader->SetUniform<int>("u_Texture", 0);
 
 	GLCall(glClearColor(0.827, 0.827, 0.827, 1.0));
 	GLCall(glLineWidth(10.0f));
@@ -89,6 +98,8 @@ int main() {
 
 		trafficLightRenderer->UpdateBuffer(segments);
 		trafficLightRenderer->Draw(GL_TRIANGLES);
+
+		logoRenderer->Draw(GL_TRIANGLES);
 
 		glfwSwapBuffers(window);
 

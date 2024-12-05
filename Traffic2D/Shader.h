@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GLError.h"
 #include <string>
 #include <unordered_map>
 #include <glm/glm.hpp>
@@ -28,5 +29,8 @@ public:
 	}
 
 	template<>
-	void SetUniform<float[2][3]>(const std::string& name, float values[2][3]);
+	void SetUniform<int>(const std::string& name, int value)
+	{
+		GLCall(glUniform1i(getUniformLocation(name), value));
+	}
 };
