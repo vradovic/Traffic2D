@@ -105,14 +105,8 @@ void updateAllCongestions(std::vector<StreetSegment>& segments)
 
 			if (lane->GetCongestion() == 0.0f) continue;
 
+			if (lane->GetTrafficLightColor() == glm::vec3(1.0f, 0.0f, 0.0f)) continue;
 			lane->DecrementCongestion();
-
-			float nextAmount = lane->GetCongestionRate() / availableLanes.size();
-
-			for (std::shared_ptr<StreetSegmentLane> availableLane : availableLanes)
-			{
-				availableLane->IncrementCongestion(nextAmount);
-			}
 		}
 	}
 }

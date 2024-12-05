@@ -2,7 +2,7 @@
 #include <thread>
 
 StreetSegmentLane::StreetSegmentLane(Vertex start, Vertex end, float congestion, float congestionRate)
-	: m_Start(start), m_End(end), m_Congestion(congestion), m_CongestionRate(congestionRate), m_TrafficLight(6.0)
+	: m_Start(start), m_End(end), m_Congestion(congestion), m_CongestionRate(congestionRate), m_TrafficLight(rand() % (10 - 6 + 1) + 6)
 {
 	m_TrafficLightThread = std::thread(&TrafficLight::Run, &m_TrafficLight);
 
@@ -37,6 +37,8 @@ void StreetSegmentLane::DecrementCongestion(float value)
 {
 	if (m_Congestion == 0.0f) return;
 
+	if (m_TrafficLight.GetColor() == 0 && m_ConnectedLanes.size() > 0) return;
+
 	if (value == 0)
 	{
 		value = m_CongestionRate;
@@ -49,6 +51,12 @@ void StreetSegmentLane::DecrementCongestion(float value)
 	else
 	{
 		m_Congestion -= value;
+
+		for (std::shared_ptr<StreetSegmentLane> lane : m_ConnectedLanes)
+		{
+			if (m_TrafficLight.GetColor() == 0) continue;
+			lane->IncrementCongestion(value / m_ConnectedLanes.size());
+		}
 	}
 
 	interpolateColor();

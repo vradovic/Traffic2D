@@ -1,6 +1,6 @@
 #include "TrafficLight.h"
 
-TrafficLight::TrafficLight(double time)
+TrafficLight::TrafficLight(int time)
 	: m_Time(time), m_Color(0), m_Running(true)
 {
 }
