@@ -9,15 +9,21 @@ StreetSegment::StreetSegment(const std::vector<std::shared_ptr<StreetSegmentLane
 
 void createStreetSegments(std::vector<StreetSegment>& segments)
 {
-	auto lane1 = std::make_shared<StreetSegmentLane>(Vertex{ 0.0f, 0.0f }, Vertex{ 0.5f, 0.0f }, 0.0f, 0.0f, 0.01f, 0.0f);
-	auto lane2 = std::make_shared<StreetSegmentLane>(Vertex{ 0.5f, 0.05f }, Vertex{ 0.0f, 0.05f }, 0.0f, 0.0f, 0.01f, 0.0f);
-	auto lane3 = std::make_shared<StreetSegmentLane>(Vertex{ 0.0f, 0.05f }, Vertex{ 0.0f, 1.0f }, 0.0f, 0.0f, 0.01f, 0.0f);
-	auto lane4 = std::make_shared<StreetSegmentLane>(Vertex{ -0.05f, 1.0f }, Vertex{ -0.05f, 0.05f }, 0.0f, 0.0f, 0.01f, 0.0f);
+	auto lane1 = std::make_shared<StreetSegmentLane>(Vertex{ 0.0f, 0.0f }, Vertex{ 0.5f, 0.0f }, 0.0f, 0.005f);
+	auto lane2 = std::make_shared<StreetSegmentLane>(Vertex{ 0.5f, 0.05f }, Vertex{ 0.0f, 0.05f }, 0.0f, 0.005f);
+	auto lane3 = std::make_shared<StreetSegmentLane>(Vertex{ 0.0f, 0.05f }, Vertex{ 0.0f, 1.0f }, 0.0f, 0.005f);
+	auto lane4 = std::make_shared<StreetSegmentLane>(Vertex{ -0.05f, 1.0f }, Vertex{ -0.05f, 0.05f }, 0.0f, 0.005f);
+	auto lane5 = std::make_shared<StreetSegmentLane>(Vertex{ -0.05f, 0.05f }, Vertex{ -1.0f, 0.05f }, 0.0f, 0.005f);
+	auto lane6 = std::make_shared<StreetSegmentLane>(Vertex{ -1.0, 0.0f }, Vertex{ -0.05f, 0.0f }, 0.0f, 0.005f);
 
 	lane2->AddLane(lane3);
+	lane2->AddLane(lane5);
+	lane4->AddLane(lane5);
+	lane6->AddLane(lane1);
 
 	segments.push_back(StreetSegment({ lane1, lane2 }));
 	segments.push_back(StreetSegment({ lane3, lane4 }));
+	segments.push_back(StreetSegment({ lane5, lane6 }));
 }
 
 void updateLaneCongestion(double mouseX, double mouseY, std::vector<StreetSegment>& segments, bool isIncrement)
@@ -47,11 +53,11 @@ void updateLaneCongestion(double mouseX, double mouseY, std::vector<StreetSegmen
 			{
 				if (isIncrement)
 				{
-					lane->IncrementCongestion();
+					lane->IncrementCongestion(0.05f);
 				}
 				else 
 				{
-					lane->DecrementCongestion();
+					lane->DecrementCongestion(0.05f);
 				}
 			}
 		}
@@ -62,14 +68,31 @@ void updateAllCongestions(std::vector<StreetSegment>& segments)
 {
 	for (StreetSegment& segment : segments)
 	{
-		for (auto lane : segment.GetLanes())
+		for (std::shared_ptr<StreetSegmentLane> lane : segment.GetLanes())
 		{
-			if (lane->GetConnectedLanes().size() < 1)
+			std::vector<std::shared_ptr<StreetSegmentLane>> connectedLanes = lane->GetConnectedLanes();
+			std::vector<std::shared_ptr<StreetSegmentLane>> availableLanes;
+
+			for (std::shared_ptr<StreetSegmentLane> connectedLane : connectedLanes)
 			{
-				continue;
+				if (connectedLane->GetCongestion() < 1.0f)
+				{
+					availableLanes.push_back(connectedLane);
+				}
 			}
 
+			if (availableLanes.empty()) continue;
+
+			if (lane->GetCongestion() == 0.0f) continue;
+
 			lane->DecrementCongestion();
+
+			float nextAmount = lane->GetCongestionRate() / availableLanes.size();
+
+			for (std::shared_ptr<StreetSegmentLane> availableLane : availableLanes)
+			{
+				availableLane->IncrementCongestion(nextAmount);
+			}
 		}
 	}
 }

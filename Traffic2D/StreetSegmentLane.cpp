@@ -1,49 +1,48 @@
 #include "StreetSegmentLane.h"
 
-StreetSegmentLane::StreetSegmentLane(Vertex start, Vertex end, float congestion, float congestionRate, float congestionStep, float congestionRateStep)
-	: m_Start(start), m_End(end), m_Congestion(congestion), m_CongestionRate(congestionRate), m_CongestionStep(congestionStep), m_CongestionRateStep(congestionRateStep)
+StreetSegmentLane::StreetSegmentLane(Vertex start, Vertex end, float congestion, float congestionRate)
+	: m_Start(start), m_End(end), m_Congestion(congestion), m_CongestionRate(congestionRate)
 {
 	interpolateColor();
 }
 
-void StreetSegmentLane::IncrementCongestion()
+void StreetSegmentLane::IncrementCongestion(float value)
 {
-	if (m_Congestion + m_CongestionStep > 1.0f)
+	if (value == 0)
+	{
+		value = m_CongestionRate;
+	}
+
+	if (m_Congestion + value > 1.0f)
 	{
 		m_Congestion = 1.0f;
 	}
 	else
 	{
-		m_Congestion += m_CongestionStep;
+		m_Congestion += value;
 	}
 	interpolateColor();
 }
 
-void StreetSegmentLane::DecrementCongestion()
+void StreetSegmentLane::DecrementCongestion(float value)
 {
-	if (m_Congestion - m_CongestionStep < 0.0f)
+	if (m_Congestion == 0.0f) return;
+
+	if (value == 0)
+	{
+		value = m_CongestionRate;
+	}
+
+	if (m_Congestion - value < 0.0f)
 	{
 		m_Congestion = 0.0f;
 	}
 	else
 	{
-		m_Congestion -= m_CongestionStep;
-		for (auto connectedLane : m_ConnectedLanes)
-		{
-			connectedLane->IncrementCongestion();
-		}
+		m_Congestion -= value;
 	}
+
 	interpolateColor();
-}
-
-void StreetSegmentLane::IncrementCongestionRate()
-{
-	m_CongestionRate += m_CongestionRateStep;
-}
-
-void StreetSegmentLane::DecrementCongestionRate()
-{
-	m_CongestionRate -= m_CongestionRateStep;
 }
 
 void StreetSegmentLane::interpolateColor()
