@@ -72,7 +72,7 @@ int main() {
 	texture.Bind();
 	logoShader->SetUniform<int>("u_Texture", 0);
 
-	GLCall(glClearColor(0.827, 0.827, 0.827, 1.0));
+	GLCall(glClearColor(1.0f, 1.0f, 1.0f, 1.0f));
 	GLCall(glLineWidth(10.0f));
 	while (!glfwWindowShouldClose(window))
 	{

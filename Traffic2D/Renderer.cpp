@@ -120,18 +120,18 @@ TrafficLightRenderer::TrafficLightRenderer(const std::vector<StreetSegment>& seg
 			}
 
 			glm::vec3 red = { 1.0f, 0.0f, 0.0f };
-			vertices.push_back(position.x - 0.03);
+			vertices.push_back(position.x - 0.01);
 			vertices.push_back(position.y);
 			vertices.push_back(red.r);
 			vertices.push_back(red.g);
 			vertices.push_back(red.b);
-			vertices.push_back(position.x + 0.03);
+			vertices.push_back(position.x + 0.01);
 			vertices.push_back(position.y);
 			vertices.push_back(red.r);
 			vertices.push_back(red.g);
 			vertices.push_back(red.b);
 			vertices.push_back(position.x);
-			vertices.push_back(position.y + 0.03);
+			vertices.push_back(position.y + 0.01);
 			vertices.push_back(red.r);
 			vertices.push_back(red.g);
 			vertices.push_back(red.b);
@@ -168,34 +168,34 @@ void TrafficLightRenderer::UpdateBuffer(const std::vector<StreetSegment>& segmen
 			Vertex position;
 			if (lane->GetStart().x > lane->GetEnd().x)
 			{
-				position = { lane->GetEnd().x + 0.05f, lane->GetEnd().y + 0.05f };
+				position = { lane->GetEnd().x + 0.02f, lane->GetEnd().y + 0.02f };
 			}
 			else if (lane->GetStart().x < lane->GetEnd().x)
 			{
-				position = { lane->GetEnd().x - 0.05f, lane->GetEnd().y - 0.05f };
+				position = { lane->GetEnd().x - 0.02f, lane->GetEnd().y - 0.02f };
 			}
 			else if (lane->GetStart().y > lane->GetEnd().y)
 			{
-				position = { lane->GetEnd().x - 0.05f, lane->GetEnd().y + 0.05f };
+				position = { lane->GetEnd().x - 0.02f, lane->GetEnd().y + 0.02f };
 			}
 			else
 			{
-				position = { lane->GetEnd().x + 0.05f, lane->GetEnd().y - 0.05f };
+				position = { lane->GetEnd().x + 0.02f, lane->GetEnd().y - 0.02f };
 			}
 
 			glm::vec3 color = lane->GetTrafficLightColor();
-			vertices.push_back(position.x - 0.03);
+			vertices.push_back(position.x - 0.02);
 			vertices.push_back(position.y);
 			vertices.push_back(color.r);
 			vertices.push_back(color.g);
 			vertices.push_back(color.b);
-			vertices.push_back(position.x + 0.03);
+			vertices.push_back(position.x + 0.02);
 			vertices.push_back(position.y);
 			vertices.push_back(color.r);
 			vertices.push_back(color.g);
 			vertices.push_back(color.b);
 			vertices.push_back(position.x);
-			vertices.push_back(position.y + 0.03);
+			vertices.push_back(position.y + 0.02);
 			vertices.push_back(color.r);
 			vertices.push_back(color.g);
 			vertices.push_back(color.b);
@@ -209,9 +209,9 @@ LogoRenderer::LogoRenderer(Shader* shader)
 {
 	std::vector<float> vertices = {
 		-1.0f, 1.0f, 0.0f, 0.0f, // x, y, tex_x, tex_y
-		-0.5f, 1.0f, 1.0f, 0.0f,
-		-0.5f, 0.5f, 1.0f, 1.0f,
-		-1.0f, 0.5f, 0.0f, 1.0f
+		-0.1f, 1.0f, 1.0f, 0.0f,
+		-0.1f, 0.6f, 1.0f, 1.0f,
+		-1.0f, 0.6f, 0.0f, 1.0f
 	};
 
 	unsigned int indices[] = {

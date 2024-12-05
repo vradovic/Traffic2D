@@ -69,7 +69,7 @@ glm::vec3 StreetSegmentLane::GetTrafficLightColor() const
 	case 0:
 		return glm::vec3(1.0f, 0.0f, 0.0f);
 	case 1:
-		return glm::vec3(0.0f, 1.0f, 0.0f);
+		return glm::vec3(0.0f, 1.0f, 0.8f);
 	default:
 		return glm::vec3(1.0f, 0.8f, 0.0f);
 	};
