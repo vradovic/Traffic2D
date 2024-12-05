@@ -1,7 +1,7 @@
 #include "StreetSegmentLane.h"
 
 StreetSegmentLane::StreetSegmentLane(Vertex start, Vertex end, float congestion, float congestionRate)
-	: m_Start(start), m_End(end), m_Congestion(congestion), m_CongestionRate(congestionRate)
+	: m_Start(start), m_End(end), m_Congestion(congestion), m_CongestionRate(congestionRate), m_TrafficLight(TrafficLight(20.0))
 {
 	interpolateColor();
 }

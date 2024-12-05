@@ -25,3 +25,17 @@ public:
 	void Draw(int mode) const;
 	void UpdateBuffer(const std::vector<StreetSegment>& segments);
 };
+
+class TrafficLightRenderer : public Renderer
+{
+private:
+	VertexArray* m_VA;
+	VertexBuffer* m_VB;
+	IndexBuffer* m_IB;
+	Shader* m_Shader;
+public:
+	TrafficLightRenderer(const std::vector<StreetSegment>& segments, Shader* shader);
+	~TrafficLightRenderer();
+	void Draw(int mode) const;
+	void UpdateBuffer(const std::vector<StreetSegment>& segments);
+};

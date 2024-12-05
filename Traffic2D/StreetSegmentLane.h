@@ -4,6 +4,8 @@
 #include <vector>
 #include <memory>
 
+#include "TrafficLight.h"
+
 struct Vertex
 {
 	float x;
@@ -19,6 +21,7 @@ private:
 	std::vector<std::shared_ptr<StreetSegmentLane>> m_ConnectedLanes;
 	float m_Congestion;
 	float m_CongestionRate;
+	TrafficLight m_TrafficLight;
 
 	void interpolateColor();
 public:

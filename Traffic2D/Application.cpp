@@ -56,10 +56,12 @@ int main() {
 	glfwSetMouseButtonCallback(window, mouseButtonCallback);
 
 	Shader* shader = new Shader("Vertex.shader", "Fragment.shader");
+	Shader* trafficLightShader = new Shader("Vertex.shader", "Fragment.shader");
 
 	std::vector<StreetSegment> segments;
 	createStreetSegments(segments);
 	StreetRenderer* renderer = new StreetRenderer(segments, shader);
+	TrafficLightRenderer* trafficLightRenderer = new TrafficLightRenderer(segments, trafficLightShader);
 
 	GLCall(glClearColor(0.827, 0.827, 0.827, 1.0));
 	GLCall(glLineWidth(10.0f));
@@ -84,6 +86,8 @@ int main() {
 		renderer->UpdateBuffer(segments);
 		renderer->Clear();
 		renderer->Draw(GL_LINES);
+
+		trafficLightRenderer->Draw(GL_TRIANGLES);
 
 		glfwSwapBuffers(window);
 
