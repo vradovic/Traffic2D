@@ -1,12 +1,15 @@
 #version 330 core
 
-layout(location = 0) in vec4 aPosition;
-layout(location = 1) in vec2 texCoord;
+layout(location = 0) in vec4 a_Position;
+layout(location = 1) in vec2 a_TexCoord;
 
 out vec2 v_TexCoord;
 
+uniform vec4 u_TexCoordOffset;
+
 void main()
-{
-   gl_Position = aPosition;
-   v_TexCoord = texCoord;
+{	
+	v_TexCoord = a_TexCoord * u_TexCoordOffset.zw + u_TexCoordOffset.xy;
+
+	gl_Position = a_Position;
 }

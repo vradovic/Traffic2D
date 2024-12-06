@@ -32,8 +32,9 @@ public:
 	void UpdateBuffer(const std::vector<StreetSegment>& segments);
 };
 
-class LogoRenderer : public Renderer
+class TextureRenderer : public Renderer
 {
 public:
-	LogoRenderer(Shader* shader);
+	TextureRenderer(Shader* shader);
+	void SetTextureCoordinates(float x, float y, float width, float height);
 };

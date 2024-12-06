@@ -205,13 +205,13 @@ void TrafficLightRenderer::UpdateBuffer(const std::vector<StreetSegment>& segmen
 	m_VB->UpdateData(vertices, 4 * vertices.size());
 }
 
-LogoRenderer::LogoRenderer(Shader* shader)
+TextureRenderer::TextureRenderer(Shader* shader)
 {
 	std::vector<float> vertices = {
 		-1.0f, 1.0f, 0.0f, 0.0f, // x, y, tex_x, tex_y
 		-0.1f, 1.0f, 1.0f, 0.0f,
 		-0.1f, 0.6f, 1.0f, 1.0f,
-		-1.0f, 0.6f, 0.0f, 1.0f
+		-1.0f, 0.6f, 0.0f, 1.0f,
 	};
 
 	unsigned int indices[] = {
@@ -230,4 +230,10 @@ LogoRenderer::LogoRenderer(Shader* shader)
 	m_IB = new IndexBuffer(indices, 6);
 	m_IB->Bind();
 	m_Shader = shader;
+}
+
+void TextureRenderer::SetTextureCoordinates(float x, float y, float width, float height)
+{
+	m_Shader->Bind();
+	m_Shader->SetUniform<glm::vec4>("u_TexCoordOffset", glm::vec4(x, y, width, height));
 }

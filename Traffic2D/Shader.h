@@ -33,4 +33,10 @@ public:
 	{
 		GLCall(glUniform1i(getUniformLocation(name), value));
 	}
+
+	template<>
+	void SetUniform<glm::vec4>(const std::string& name, glm::vec4 value)
+	{
+		GLCall(glUniform4f(getUniformLocation(name), value.x, value.y, value.z, value.w));
+	}
 };

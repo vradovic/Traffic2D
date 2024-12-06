@@ -58,19 +58,21 @@ int main() {
 
 	Shader* shader = new Shader("Vertex.shader", "Fragment.shader");
 	Shader* trafficLightShader = new Shader("Vertex.shader", "Fragment.shader");
-	Shader* logoShader = new Shader("VertexTexture.shader", "FragmentTexture.shader");
+	Shader* textureShader = new Shader("VertexTexture.shader", "FragmentTexture.shader");
+	Shader* nameShader = new Shader("VertexTexture.shader", "FragmentTexture.shader");
 
 	std::vector<StreetSegment> segments;
 	createStreetSegments(segments);
 
 	StreetRenderer* renderer = new StreetRenderer(segments, shader);
 	TrafficLightRenderer* trafficLightRenderer = new TrafficLightRenderer(segments, trafficLightShader);
-	LogoRenderer* logoRenderer = new LogoRenderer(logoShader);
+	TextureRenderer* textureRenderer = new TextureRenderer(textureShader);
+	textureRenderer->SetTextureCoordinates(0.0f, 0.0f, 1.0f, 1.0f);
 
-	logoShader->Bind();
+	textureShader->Bind();
 	Texture texture("grb.png");
 	texture.Bind();
-	logoShader->SetUniform<int>("u_Texture", 0);
+	textureShader->SetUniform<int>("u_Texture", 0);
 
 	GLCall(glClearColor(1.0f, 1.0f, 1.0f, 1.0f));
 	GLCall(glLineWidth(10.0f));
@@ -99,7 +101,7 @@ int main() {
 		trafficLightRenderer->UpdateBuffer(segments);
 		trafficLightRenderer->Draw(GL_TRIANGLES);
 
-		logoRenderer->Draw(GL_TRIANGLES);
+		textureRenderer->Draw(GL_TRIANGLES);
 
 		glfwSwapBuffers(window);
 
