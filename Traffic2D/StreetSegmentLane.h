@@ -30,6 +30,8 @@ public:
 	~StreetSegmentLane();
 	void IncrementCongestion(float value = 0);
 	void DecrementCongestion(float value = 0);
+	void IncrementCongestionRate(float value);
+	void DecrementCongestionRate(float value);
 
 	Vertex GetStart() const { return m_Start; }
 	Vertex GetEnd() const { return m_End; }

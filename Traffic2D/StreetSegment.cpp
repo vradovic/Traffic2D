@@ -251,3 +251,41 @@ void updateAllCongestions(std::vector<StreetSegment>& segments)
 		}
 	}
 }
+
+void updateLaneCongestionRate(double mouseX, double mouseY, std::vector<StreetSegment>& segments, bool isIncrement)
+{
+	const float buffer = 0.01f;
+	for (StreetSegment& segment : segments)
+	{
+		for (auto lane : segment.GetLanes())
+		{
+			double laneStartX = lane->GetStart().x;
+			double laneEndX = lane->GetEnd().x;
+			double laneStartY = lane->GetStart().y;
+			double laneEndY = lane->GetEnd().y;
+
+			if (laneStartX > laneEndX)
+			{
+				std::swap(laneStartX, laneEndX);
+			}
+
+			if (laneStartY > laneEndY)
+			{
+				std::swap(laneStartY, laneEndY);
+			}
+
+			if (mouseX >= laneStartX - buffer && mouseX <= laneEndX + buffer &&
+				mouseY >= laneStartY - buffer && mouseY <= laneEndY + buffer)
+			{
+				if (isIncrement)
+				{
+					lane->IncrementCongestionRate(0.05f);
+				}
+				else
+				{
+					lane->DecrementCongestionRate(0.05f);
+				}
+			}
+		}
+	}
+}

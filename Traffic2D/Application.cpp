@@ -22,11 +22,14 @@
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+void scrollCallback(GLFWwindow* window, double x, double y);
 
 static bool mouseLeftHeld = false;
 static bool mouseRightHeld = false;
 static double mouseX = 0.0;
 static double mouseY = 0.0;
+static bool scrollUp = false;
+static bool scrollDown = false;
 
 int main() {
 	if (!glfwInit()) {
@@ -55,6 +58,7 @@ int main() {
 	glfwSwapInterval(1);
 	glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 	glfwSetMouseButtonCallback(window, mouseButtonCallback);
+	glfwSetScrollCallback(window, scrollCallback);
 
 	Shader* shader = new Shader("Vertex.shader", "Fragment.shader");
 	Shader* trafficLightShader = new Shader("Vertex.shader", "Fragment.shader");
@@ -87,9 +91,16 @@ int main() {
 		{
 			updateLaneCongestion(mouseX, mouseY, segments, mouseLeftHeld);
 		}
-		else if (mouseRightHeld)
+
+		if (scrollUp)
 		{
-			// Decrement lane congestion
+			updateLaneCongestionRate(mouseX, mouseY, segments, true);
+			scrollUp = false;
+		}
+		else if (scrollDown)
+		{
+			updateLaneCongestionRate(mouseX, mouseY, segments, false);
+			scrollDown = false;
 		}
 
 		updateAllCongestions(segments);
@@ -134,5 +145,27 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 
 		mouseLeftHeld = action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_LEFT;
 		mouseRightHeld = action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_RIGHT;
+	}
+}
+
+void scrollCallback(GLFWwindow* window, double x, double y)
+{
+	double xpos, ypos;
+	glfwGetCursorPos(window, &xpos, &ypos);
+
+	int width, height;
+	glfwGetWindowSize(window, &width, &height);
+
+	// Normalize mouse coordinates
+	mouseX = 2.0f * (xpos / width) - 1.0f;
+	mouseY = 1.0f - 2.0f * (ypos / height);
+
+	if (y > 0)
+	{
+		scrollUp = true;
+	}
+	else if (y < 0)
+	{
+		scrollDown = true;
 	}
 }

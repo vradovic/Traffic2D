@@ -18,3 +18,4 @@ void createStreetSegments(std::vector<StreetSegment>& segments);
 
 void updateLaneCongestion(double mouseX, double mouseY, std::vector<StreetSegment>& segments, bool isIncrement);
 void updateAllCongestions(std::vector<StreetSegment>& segments);
+void updateLaneCongestionRate(double mouseX, double mouseY, std::vector<StreetSegment>& segments, bool isIncrement);
